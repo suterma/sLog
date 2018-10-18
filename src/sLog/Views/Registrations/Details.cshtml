@@ -1,0 +1,30 @@
+﻿@model sLog.Models.Registration
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Registration</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RegistrationToken)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RegistrationToken)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EMailAddress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EMailAddress)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.RegistrationId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

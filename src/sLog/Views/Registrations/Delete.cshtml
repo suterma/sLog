@@ -1,0 +1,33 @@
+﻿@model sLog.Models.Registration
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Registration</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RegistrationToken)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RegistrationToken)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EMailAddress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EMailAddress)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="RegistrationId" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
