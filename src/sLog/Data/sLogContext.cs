@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using sLog.Models;
 
 namespace sLog.Models
 {
@@ -36,5 +37,7 @@ namespace sLog.Models
         }
 
         public DbSet<Registration> Registration { get; set; }
+
+        public DbSet<sLog.Models.Log> Log { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace sLog.Migrations
@@ -12,7 +13,9 @@ namespace sLog.Migrations
                 columns: table => new
                 {
                     RegistrationToken = table.Column<Guid>(nullable: false),
-                    RegistrationId = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    RegistrationId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EMailAddress = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -28,7 +31,7 @@ namespace sLog.Migrations
                     Timestamp = table.Column<DateTime>(nullable: false),
                     Data = table.Column<string>(nullable: true),
                     MimeType = table.Column<string>(nullable: true),
-                    RegistrationId = table.Column<string>(nullable: true)
+                    RegistrationId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,7 +41,7 @@ namespace sLog.Migrations
                         column: x => x.RegistrationId,
                         principalTable: "Registration",
                         principalColumn: "RegistrationId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

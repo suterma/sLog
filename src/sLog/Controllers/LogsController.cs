@@ -9,85 +9,91 @@ using sLog.Models;
 
 namespace sLog.Controllers
 {
-    public class RegistrationsController : Controller
+    public class LogsController : Controller
     {
         private readonly sLogContext _context;
 
-        public RegistrationsController(sLogContext context)
+        public LogsController(sLogContext context)
         {
             _context = context;
         }
 
-        // GET: Registrations
+        // GET: Logs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Registration.ToListAsync());
+            var sLogContext = _context.Log.Include(l => l.Registration);
+            return View(await sLogContext.ToListAsync());
         }
 
-        // GET: Registrations/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Logs/Details/5
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var registration = await _context.Registration
-                .FirstOrDefaultAsync(m => m.RegistrationId == id);
-            if (registration == null)
+            var log = await _context.Log
+                .Include(l => l.Registration)
+                .FirstOrDefaultAsync(m => m.LogId == id);
+            if (log == null)
             {
                 return NotFound();
             }
 
-            return View(registration);
+            return View(log);
         }
 
-        // GET: Registrations/Create
+        // GET: Logs/Create
         public IActionResult Create()
         {
+            ViewData["RegistrationId"] = new SelectList(_context.Registration, "RegistrationId", "RegistrationId");
             return View();
         }
 
-        // POST: Registrations/Create
+        // POST: Logs/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RegistrationToken,Description,RegistrationId,EMailAddress")] Registration registration)
+        public async Task<IActionResult> Create([Bind("LogId,Timestamp,Data,MimeType,RegistrationId")] Log log)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(registration);
+                log.LogId = Guid.NewGuid();
+                _context.Add(log);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(registration);
+            ViewData["RegistrationId"] = new SelectList(_context.Registration, "RegistrationId", "RegistrationId", log.RegistrationId);
+            return View(log);
         }
 
-        // GET: Registrations/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Logs/Edit/5
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var registration = await _context.Registration.FindAsync(id);
-            if (registration == null)
+            var log = await _context.Log.FindAsync(id);
+            if (log == null)
             {
                 return NotFound();
             }
-            return View(registration);
+            ViewData["RegistrationId"] = new SelectList(_context.Registration, "RegistrationId", "RegistrationId", log.RegistrationId);
+            return View(log);
         }
 
-        // POST: Registrations/Edit/5
+        // POST: Logs/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RegistrationToken,Description,RegistrationId,EMailAddress")] Registration registration)
+        public async Task<IActionResult> Edit(Guid id, [Bind("LogId,Timestamp,Data,MimeType,RegistrationId")] Log log)
         {
-            if (id != registration.RegistrationId)
+            if (id != log.LogId)
             {
                 return NotFound();
             }
@@ -96,12 +102,12 @@ namespace sLog.Controllers
             {
                 try
                 {
-                    _context.Update(registration);
+                    _context.Update(log);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RegistrationExists(registration.RegistrationId))
+                    if (!LogExists(log.LogId))
                     {
                         return NotFound();
                     }
@@ -112,41 +118,43 @@ namespace sLog.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(registration);
+            ViewData["RegistrationId"] = new SelectList(_context.Registration, "RegistrationId", "RegistrationId", log.RegistrationId);
+            return View(log);
         }
 
-        // GET: Registrations/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Logs/Delete/5
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var registration = await _context.Registration
-                .FirstOrDefaultAsync(m => m.RegistrationId == id);
-            if (registration == null)
+            var log = await _context.Log
+                .Include(l => l.Registration)
+                .FirstOrDefaultAsync(m => m.LogId == id);
+            if (log == null)
             {
                 return NotFound();
             }
 
-            return View(registration);
+            return View(log);
         }
 
-        // POST: Registrations/Delete/5
+        // POST: Logs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var registration = await _context.Registration.FindAsync(id);
-            _context.Registration.Remove(registration);
+            var log = await _context.Log.FindAsync(id);
+            _context.Log.Remove(log);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RegistrationExists(int id)
+        private bool LogExists(Guid id)
         {
-            return _context.Registration.Any(e => e.RegistrationId == id);
+            return _context.Log.Any(e => e.LogId == id);
         }
     }
 }

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<sLog.Models.Log>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Timestamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Data)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MimeType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registration)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Data)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MimeType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Registration.RegistrationId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LogId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.LogId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.LogId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

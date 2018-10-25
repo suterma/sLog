@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace sLog.Models
 {
@@ -14,6 +15,7 @@ namespace sLog.Models
         /// <value>
         ///     The identifier.
         /// </value>
+        [Key]
         public Guid LogId { get; set; }
 
         /// <summary>
@@ -22,6 +24,7 @@ namespace sLog.Models
         /// <value>
         ///     The timestamp.
         /// </value>
+        [BindRequired]
         public DateTime Timestamp { get; set; }
 
         /// <summary>
@@ -39,14 +42,27 @@ namespace sLog.Models
         /// <value>
         ///     The MIME type of the data.
         /// </value>
+        [Display(Name = "MIME type")]
+        [DataType(DataType.Text)]
         public string MimeType { get; set; }
 
         /// <summary>
-        /// Gets or sets the registration.
+        /// Gets or sets the registration identifier.
         /// </summary>
         /// <value>
-        /// The registration.
+        /// The registration identifier.
         /// </value>
-        public Registration Registration { get; set; }
+        [Display(Name = "Registration")]
+        public int RegistrationId { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the registration.
+        /// </summary>
+        /// <remarks>References the Registration Token, the log entry was created with.</remarks>
+        /// <value>
+        ///     The registration.
+        /// </value>
+        [Required(ErrorMessage = "Please reference an existing registration.")]
+        public virtual Registration Registration { get; set; }
     }
 }

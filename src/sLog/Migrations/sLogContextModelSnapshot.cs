@@ -28,7 +28,7 @@ namespace sLog.Migrations
 
                     b.Property<string>("MimeType");
 
-                    b.Property<string>("RegistrationId");
+                    b.Property<int>("RegistrationId");
 
                     b.Property<DateTime>("Timestamp");
 
@@ -41,8 +41,11 @@ namespace sLog.Migrations
 
             modelBuilder.Entity("sLog.Models.Registration", b =>
                 {
-                    b.Property<string>("RegistrationId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("RegistrationId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description");
 
                     b.Property<string>("EMailAddress");
 
@@ -57,7 +60,8 @@ namespace sLog.Migrations
                 {
                     b.HasOne("sLog.Models.Registration", "Registration")
                         .WithMany("Logs")
-                        .HasForeignKey("RegistrationId");
+                        .HasForeignKey("RegistrationId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
