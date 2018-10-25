@@ -11,9 +11,21 @@ namespace sLog.Models
     ///     https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db?tabs=visual-studio#create-the-database
     ///     for guidance on creating the database.
     ///     <para>
-    ///         Use
-    ///         "EntityFrameworkCore\Add-Migration InitialCreate" and "EntityFrameworkCore\Update-Database" to create a new
-    ///         database from scratch.
+    ///         <list type="bullet">
+    ///             <item>
+    ///                 <description>Make this project the startup project</description>
+    ///             </item>
+    ///             <item>
+    ///                 <description>Use Packet Manager Console:</description>
+    ///             </item>
+    ///             <item>
+    ///                 <description>
+    ///                     Use
+    ///                     "EntityFrameworkCore\Add-Migration InitialCreate" and
+    ///                     "EntityFrameworkCore\Update-Database" to create a new database from scratch.
+    ///                 </description>
+    ///             </item>
+    ///         </list>
     ///     </para>
     /// </devdoc>
     public class sLogContext : DbContext
