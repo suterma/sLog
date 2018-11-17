@@ -53,6 +53,7 @@ namespace sLog.Models
         /// The registration identifier.
         /// </value>
         [Display(Name = "Registration")]
+        [Required(ErrorMessage = "Please reference an existing registration.")]
         public int RegistrationId { get; set; }
 
         /// <summary>
