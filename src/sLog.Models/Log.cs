@@ -63,7 +63,7 @@ namespace sLog.Models
         /// <value>
         ///     The registration.
         /// </value>
-        [Required(ErrorMessage = "Please reference an existing registration.")]
+        //[Required(ErrorMessage = "Please reference an existing registration.")]
         public virtual Registration Registration { get; set; }
     }
 }

@@ -21,9 +21,16 @@ namespace sLog.Models
     ///             </item>
     ///             <item>
     ///                 <description>
-    ///                     Use
+    ///                     To create, use
     ///                     "EntityFrameworkCore\Add-Migration InitialCreate" and
     ///                     "EntityFrameworkCore\Update-Database" to create a new database from scratch.
+    ///                 </description>
+    ///             </item>
+    ///             <item>
+    ///                 <description>
+    ///                     To update, use
+    ///                     "EntityFrameworkCore\Add-Migration" and
+    ///                     "EntityFrameworkCore\Update-Database" to update the existing database.
     ///                 </description>
     ///             </item>
     ///         </list>
