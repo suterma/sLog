@@ -10,8 +10,8 @@ using sLog.Models;
 namespace sLog.Migrations
 {
     [DbContext(typeof(sLogContext))]
-    [Migration("20181119072811_1to1 relation fix")]
-    partial class _1to1relationfix
+    [Migration("20181130215922_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,8 +23,11 @@ namespace sLog.Migrations
 
             modelBuilder.Entity("sLog.Models.Log", b =>
                 {
-                    b.Property<Guid>("LogId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("LogId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ContentType");
 
                     b.Property<string>("Data");
 

@@ -26,7 +26,7 @@ namespace sLog.Controllers
         }
 
         // GET: Logs/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -63,7 +63,7 @@ namespace sLog.Controllers
         {
             if (ModelState.IsValid)
             {
-                log.LogId = Guid.NewGuid();
+                //TODO delete log.LogId = Guid.NewGuid();
                 _context.Add(log);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -73,7 +73,7 @@ namespace sLog.Controllers
         }
 
         // GET: Logs/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -94,7 +94,7 @@ namespace sLog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("LogId,Timestamp,Data,MimeType,RegistrationId")] Log log)
+        public async Task<IActionResult> Edit(int id, [Bind("LogId,Timestamp,Data,MimeType,RegistrationId")] Log log)
         {
             if (id != log.LogId)
             {
@@ -126,7 +126,7 @@ namespace sLog.Controllers
         }
 
         // GET: Logs/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -147,7 +147,7 @@ namespace sLog.Controllers
         // POST: Logs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var log = await _context.Log.FindAsync(id);
             _context.Log.Remove(log);
@@ -155,7 +155,7 @@ namespace sLog.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LogExists(Guid id)
+        private bool LogExists(int id)
         {
             return _context.Log.Any(e => e.LogId == id);
         }

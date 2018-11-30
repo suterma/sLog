@@ -16,7 +16,7 @@ namespace sLog.Models
         ///     The identifier.
         /// </value>
         [Key]
-        public Guid LogId { get; set; }
+        public int LogId { get; set; }
 
         /// <summary>
         ///     Gets or sets the timestamp.
@@ -45,6 +45,17 @@ namespace sLog.Models
         [Display(Name = "MIME type")]
         [DataType(DataType.Text)]
         public string MimeType { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the content type of the data.
+        /// </summary>
+        /// <remarks>The content type can be a full class name or other identifier of the type of the contained data. Is may be used to deserialize the stored data.</remarks>
+        /// <value>
+        ///     The content type of the data.
+        /// </value>
+        [Display(Name = "Content type")]
+        [DataType(DataType.Text)]
+        public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the registration identifier.

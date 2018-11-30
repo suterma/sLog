@@ -21,8 +21,11 @@ namespace sLog.Migrations
 
             modelBuilder.Entity("sLog.Models.Log", b =>
                 {
-                    b.Property<Guid>("LogId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("LogId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ContentType");
 
                     b.Property<string>("Data");
 

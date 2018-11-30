@@ -19,9 +19,7 @@ namespace sLog.Demo.DataSource.NetScanner
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
-            var config = GetConfiguration();
-
-
+            IConfigurationRoot config = GetConfiguration();
 
             //Prepare client
             client.BaseAddress = new Uri("http://localhost:50062/api/");
@@ -38,14 +36,26 @@ namespace sLog.Demo.DataSource.NetScanner
                 Console.WriteLine("Skip scanning LAN Subnet...");
             }
 
-            var scanTarget = config.GetSection("ScanTarget");
-            umbauen nach IP-Adresse
-            Console.WriteLine("Scanning address...");
+            IPAddress target;
+            string scanTarget = config["ScanTarget"];
+            if (IPAddress.TryParse(scanTarget, out target))
+            {
+                Console.WriteLine("Scanning target " + scanTarget);
+                StartTargetScan(target);
+            }
+            else
+            {
+                Console.WriteLine("Skip scanning targets.");
+            }
+        }
 
-            //foreach (var VARIABLE in scanTarget)
-            //{
-
-            //}
+        /// <summary>
+        /// Starts the target scan.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        private static void StartTargetScan(IPAddress target)
+        {
+            Ping(target);
         }
 
         /// <summary>
@@ -56,7 +66,7 @@ namespace sLog.Demo.DataSource.NetScanner
         /// </devdoc>
         private static IConfigurationRoot GetConfiguration()
         {
-            var builder = new ConfigurationBuilder()
+            IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
@@ -118,20 +128,27 @@ namespace sLog.Demo.DataSource.NetScanner
             System.Console.ReadKey();
         }
 
-        private static void Ping(IPAddress iPAddress)
+        private static void Ping(IPAddress ipAddress)
         {
             Ping p = new Ping();
-            PingReply rep = p.Send(iPAddress);
+            PingReply rep = p.Send(ipAddress);
             if (rep.Status == System.Net.NetworkInformation.IPStatus.Success)
             {
-                Console.WriteLine(iPAddress + " is active. RTT: " + rep.RoundtripTime + " ms");
+                Console.WriteLine(ipAddress + " is active. RTT: " + rep.RoundtripTime + " ms");
             }
             else
             {
-                Console.WriteLine(iPAddress + " is missing.");
+                Console.WriteLine(ipAddress + " is missing.");
             }
 
-            PostResponseToLogAsync(rep).Wait();
+            PingResult result = new PingResult()
+            {
+                Target = ipAddress.ToString(),
+                RoundtripTime = TimeSpan.FromMilliseconds(rep.RoundtripTime),
+                Status = rep.Status
+            };
+
+            PostResponseToLogAsync(result).Wait();
             Console.WriteLine("Log posted.");
 
         }
@@ -144,17 +161,22 @@ namespace sLog.Demo.DataSource.NetScanner
         /// <param name="rep">The PING reply.</param>
         /// <exception cref="NotImplementedException"></exception>
         /// <devdoc>See https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/console-webapiclient</devdoc>
-        private static async Task PostResponseToLogAsync(PingReply reply)
+        private static async Task PostResponseToLogAsync(PingResult result)
         {
-            var log = new sLog.Models.Log() {
+
+            string data = JsonConvert.SerializeObject(result);
+
+            Models.Log log = new sLog.Models.Log()
+            {
                 MimeType = "application/json",
-                Data = JsonConvert.SerializeObject(reply), //TODO use a custom model class
-            RegistrationId = 1,
+                Data = data, 
+                ContentType = result.GetType().FullName.ToString(),
+                RegistrationId = 1,
                 Timestamp = DateTime.Now
             };
 
             string jsonInString = JsonConvert.SerializeObject(log);
-            var stringContent = new StringContent(jsonInString, Encoding.UTF8, "application/json");
+            StringContent stringContent = new StringContent(jsonInString, Encoding.UTF8, "application/json");
             Task<HttpResponseMessage> stringTask = client.PostAsync("LogApi", stringContent);
             HttpResponseMessage msg = await stringTask;
             Console.WriteLine(msg);

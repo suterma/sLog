@@ -58,7 +58,7 @@ namespace sLog.Controllers
 
         // PUT: api/LogApi/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLog([FromRoute] Guid id, [FromBody] Log log)
+        public async Task<IActionResult> PutLog([FromRoute] int id, [FromBody] Log log)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -117,7 +117,7 @@ namespace sLog.Controllers
 
         // DELETE: api/LogApi/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLog([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteLog([FromRoute] int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -132,7 +132,7 @@ namespace sLog.Controllers
             return Ok(log);
         }
 
-        private bool LogExists(Guid id)
+        private bool LogExists(int id)
         {
             return _context.Log.Any(e => e.LogId == id);
         }

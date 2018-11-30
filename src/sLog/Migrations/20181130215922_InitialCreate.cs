@@ -27,10 +27,12 @@ namespace sLog.Migrations
                 name: "Log",
                 columns: table => new
                 {
-                    LogId = table.Column<Guid>(nullable: false),
+                    LogId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Timestamp = table.Column<DateTime>(nullable: false),
                     Data = table.Column<string>(nullable: true),
                     MimeType = table.Column<string>(nullable: true),
+                    ContentType = table.Column<string>(nullable: true),
                     RegistrationId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
