@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace sLog.Demo.DataSource.NetScanner
 {
@@ -17,14 +19,55 @@ namespace sLog.Demo.DataSource.NetScanner
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
+            var config = GetConfiguration();
+
+
+
             //Prepare client
             client.BaseAddress = new Uri("http://localhost:50062/api/");
 
-            Console.WriteLine("Scanning LAN Subnet...");
-            StartScan();
+
+            //Execute the scans according to the config
+            if (config["ScanSubnet"] == "true")
+            {
+                Console.WriteLine("Scanning LAN Subnet...");
+                StartLocalScan();
+            }
+            else
+            {
+                Console.WriteLine("Skip scanning LAN Subnet...");
+            }
+
+            var scanTarget = config.GetSection("ScanTarget");
+            umbauen nach IP-Adresse
+            Console.WriteLine("Scanning address...");
+
+            //foreach (var VARIABLE in scanTarget)
+            //{
+
+            //}
         }
 
-        private static void StartScan()
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <returns></returns>
+        /// <devdoc>Taken from: https://blog.bitscry.com/2017/05/30/appsettings-json-in-net-core-console-app/
+        /// </devdoc>
+        private static IConfigurationRoot GetConfiguration()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+            return configuration;
+        }
+
+        /// <summary>
+        /// Starts the local ping scan scan.
+        /// </summary>
+        private static void StartLocalScan()
         {
             //Taken from http://www.morethantechnical.com/2009/01/26/scanning-your-entire-lan-for-mac-addresses/
 
