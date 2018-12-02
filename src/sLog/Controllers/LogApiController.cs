@@ -15,8 +15,7 @@ namespace sLog.Controllers
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     /// <devdoc>
     ///     //TODO add annotations to all method, including examples.
-    ///     see https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-2.1
-    ///     &tabs=visual-studio
+    ///     see https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-2.1&tabs=visual-studio
     /// </devdoc>
     [Produces("application/json")]
     [Route("api/[controller]")]

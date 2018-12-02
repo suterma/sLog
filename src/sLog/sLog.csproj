@@ -23,5 +23,11 @@
     <ProjectReference Include="..\sLog.Models\sLog.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Browser\Execute.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
   
 </Project>
