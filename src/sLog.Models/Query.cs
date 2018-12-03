@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Data;
 
 namespace sLog.Models
 {
@@ -10,7 +8,20 @@ namespace sLog.Models
 
         public string SelectCommand { get; set; }
 
-        public ICollection<string> Rows { get; set; } = new List<string>();
+        /// <summary>
+        ///     Gets or sets the resulting data set from the query.
+        /// </summary>
+        /// <value>
+        ///     The data set.
+        /// </value>
+        public DataTable DataSet { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the resulting data set from the query.
+        /// </summary>
+        /// <value>
+        ///     The data set.
+        /// </value>
+        public DataTable TableSchema { get; set; }
     }
 }
-
