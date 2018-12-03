@@ -1,11 +1,14 @@
-﻿using System.Data;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Data;
 
 namespace sLog.Models
 {
     public class Query
     {
+        [BindRequired]
         public string ConnectionString { get; set; }
 
+        [BindRequired]
         public string SelectCommand { get; set; }
 
         /// <summary>
@@ -14,6 +17,7 @@ namespace sLog.Models
         /// <value>
         ///     The data set.
         /// </value>
+        [BindNever]
         public DataTable DataSet { get; set; }
 
         /// <summary>
@@ -22,6 +26,7 @@ namespace sLog.Models
         /// <value>
         ///     The data set.
         /// </value>
+                 [BindNever]
         public DataTable TableSchema { get; set; }
     }
 }

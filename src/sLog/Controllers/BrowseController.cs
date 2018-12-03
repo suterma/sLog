@@ -6,7 +6,7 @@ using sLog.Models;
 
 namespace sLog.Controllers
 {
-    public class BrowserController : Controller
+    public class BrowseController : Controller
     {
         // GET: Browser
         public IActionResult Index()

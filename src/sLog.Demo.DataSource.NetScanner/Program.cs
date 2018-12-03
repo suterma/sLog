@@ -8,6 +8,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System.Threading;
 
 namespace sLog.Demo.DataSource.NetScanner
 {
@@ -22,30 +23,37 @@ namespace sLog.Demo.DataSource.NetScanner
             IConfigurationRoot config = GetConfiguration();
 
             //Prepare client
-            client.BaseAddress = new Uri("http://localhost:50062/api/");
+            var apiBaseAddress = config["sLogApiBaseAddress"];
+            if (string.IsNullOrEmpty(apiBaseAddress))
+            {
+                throw new ArgumentException("Configuration for the sLogApiBaseAddress missing");
+                    }
+            client.BaseAddress = new Uri(apiBaseAddress);
 
+            while (true)
+            {
+                //Execute the scans according to the config
+                if (config["ScanSubnet"] == "true")
+                {
+                    Console.WriteLine("Scanning LAN Subnet...");
+                    StartLocalScan();
+                }
+                else
+                {
+                    Console.WriteLine("Skip scanning LAN Subnet...");
+                }
 
-            //Execute the scans according to the config
-            if (config["ScanSubnet"] == "true")
-            {
-                Console.WriteLine("Scanning LAN Subnet...");
-                StartLocalScan();
-            }
-            else
-            {
-                Console.WriteLine("Skip scanning LAN Subnet...");
-            }
-
-            IPAddress target;
-            string scanTarget = config["ScanTarget"];
-            if (IPAddress.TryParse(scanTarget, out target))
-            {
-                Console.WriteLine("Scanning target " + scanTarget);
-                StartTargetScan(target);
-            }
-            else
-            {
-                Console.WriteLine("Skip scanning targets.");
+                IPAddress target;
+                string scanTarget = config["ScanTarget"];
+                if (IPAddress.TryParse(scanTarget, out target))
+                {
+                    Console.WriteLine("Scanning target " + scanTarget);
+                    StartTargetScan(target);
+                }
+                else
+                {
+                    Console.WriteLine("Skip scanning targets.");
+                }
             }
         }
 
@@ -112,15 +120,6 @@ namespace sLog.Demo.DataSource.NetScanner
 
                                     IPAddress ipAddress = IPAddress.Parse(o0 + "." + o1 + "." + o2 + "." + o3);
                                     Ping(ipAddress);
-                                    //String MAC = GetMacFromIP(IPAddress.Parse(o0 + "." + o1 + "." + o2 + "." + o3));
-                                    //if (MAC == "00:00:00:00:00:00")
-                                    //    continue;
-                                    //ItemIP = o0 + "." + o1 + "." + o2 + "." + o3;
-                                    //ItemMAC = GetMacFromIP(IPAddress.Parse(o0 + "." + o1 + "." + o2 + "." + o3));
-                                    //String[] Item = new String[2];
-                                    //Item[0] = ItemMAC;
-                                    //Item[1] = ItemIP;                                                                                                                               /** You can add Item[] to any collection */
-                                    //Console.WriteLine(Item[0] + " --> " + Item[1]);
                                 }
                 }
             }
@@ -151,6 +150,8 @@ namespace sLog.Demo.DataSource.NetScanner
             PostResponseToLogAsync(result).Wait();
             Console.WriteLine("Log posted.");
 
+            Thread.Sleep(1000);
+
         }
 
         private static readonly HttpClient client = new HttpClient();
@@ -169,7 +170,7 @@ namespace sLog.Demo.DataSource.NetScanner
             Models.Log log = new sLog.Models.Log()
             {
                 MimeType = "application/json",
-                Data = data, 
+                Data = data,
                 ContentType = result.GetType().FullName.ToString(),
                 RegistrationId = 1,
                 Timestamp = DateTime.Now
