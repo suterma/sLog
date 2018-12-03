@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\sLog.Demo.DataSource.NetScanner\sLog.Demo.DataSource.NetScanner.csproj" />
+    <ProjectReference Include="..\sLog.Models\sLog.Models.csproj" />
+  </ItemGroup>
+
+</Project>

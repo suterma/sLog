@@ -1,0 +1,50 @@
+﻿@model IEnumerable<sLog.Analyzers.PingLogAnalyzer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeStamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoundtripTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeStamp)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Target">
+                        @Html.DisplayFor(modelItem => item.Target)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoundtripTime)
+                </td>
+                @*<td>
+                        <a asp-action="Details" asp-route-id="@item.LogId">Details</a> |
+                    </td>*@
+            </tr>
+        }
+    </tbody>
+</table>

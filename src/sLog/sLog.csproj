@@ -20,10 +20,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\sLog.Analyzers\sLog.Analyzers.csproj" />
     <ProjectReference Include="..\sLog.Models\sLog.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Analyze\Details.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Analyze\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Browse\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
