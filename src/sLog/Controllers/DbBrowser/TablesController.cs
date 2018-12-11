@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using sLog.Filters;
 using sLog.Models;
 
-namespace sLog.Controllers
+namespace sLog.Controllers.DbBrowser
 {
-    public class BrowseController : Controller
+    [EvaluatePerformanceFilter]
+    public class TablesController : Controller
     {
         // GET: Browser
         public IActionResult Index()
@@ -18,20 +22,50 @@ namespace sLog.Controllers
         ///     Executes the specified select command.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
-        /// <param name="selectCommand">The SQL SELECT command.</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Index(string connectionString, string selectCommand)
+        public IActionResult Index(string connectionString)
         {
-            var dataAndSchema = GetDataSetAndSchema(connectionString, selectCommand);
+            var tableNames = GetTableNames(connectionString);
 
-            //Build the model with the parameters
-            var result = new Query
+            //TODO use partial views, with their partial model
+            return View(new TableNames()
             {
-                DataSet = dataAndSchema.Item1,
-                TableSchema = dataAndSchema.Item2
-            };
-            return View(result);
+                ConnectionString = connectionString,
+                Names = tableNames
+            });
+        }
+
+        /// <summary>
+        ///     Holt die Tabellennamen mithilfe des DbSchemas. Zugriffsrechte auf das Schema sind Voraussetzung.
+        /// </summary>
+        /// <returns>Die verfügbaren Tabellennamen</returns>
+        /// <devdoc>
+        ///     Siehe auch http://stackoverflow.com/a/3914051/79485
+        /// </devdoc>
+        public IEnumerable<String> GetTableNames(string connectionString)
+        {
+            var tableNames = new List<String>();
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                sqlConnection.Open();
+                //BASE TABLE bezeichnet Tabellen, VIEW wäre für Views
+                var command = new SqlCommand(
+                    "SELECT TABLE_NAME " +
+                    "FROM INFORMATION_SCHEMA.TABLES " +
+                    "WHERE TABLE_TYPE = 'BASE TABLE'", sqlConnection);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var tableName = reader.GetString(0);
+                        tableNames.Add(tableName);
+                    }
+                    reader.Close();
+                }
+            }
+            return tableNames;
         }
 
         /// <summary>

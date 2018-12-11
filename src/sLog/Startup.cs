@@ -89,6 +89,11 @@ namespace sLog
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                //Additional route to have the DbBrowser in it's own subfolder
+                routes.MapRoute(
+                    name: "DbBrowser",
+                    template: "db/{controller=Query}/{action=Index}/{id?}");
             });
         }
     }
