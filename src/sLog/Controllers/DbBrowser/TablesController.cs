@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using sLog.Filters;
 using sLog.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace sLog.Controllers.DbBrowser
 {
@@ -21,10 +22,21 @@ namespace sLog.Controllers.DbBrowser
         [HttpPost]
         public IActionResult Index(string connectionString)
         {
-            /TODO auf Session legen
             if (string.IsNullOrEmpty(connectionString))
             {
-                connectionString = "Data Source=.;Initial Catalog=sLogContext-b7effb6c-e814-4615-951a-7452b76832c9;Integrated Security=True";
+                //not available, try to retrieve
+                connectionString = HttpContext.Session.GetString("DbBrowserConnectionString");
+
+                //If still not available, redirect to input view
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    return RedirectToAction("Index", "ConnectionString");
+                }
+            }
+            else
+            {
+                //available, store
+                this.HttpContext.Session.SetString("DbBrowserConnectionString", connectionString);
             }
 
             IEnumerable<string> tableNames = GetTableNames(connectionString);
