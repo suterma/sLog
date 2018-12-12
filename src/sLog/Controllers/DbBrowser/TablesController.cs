@@ -12,23 +12,23 @@ namespace sLog.Controllers.DbBrowser
     [EvaluatePerformanceFilter]
     public class TablesController : Controller
     {
-        // GET: Browser
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         /// <summary>
         ///     Executes the specified select command.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <returns></returns>
+        [HttpGet]
         [HttpPost]
         public IActionResult Index(string connectionString)
         {
-            var tableNames = GetTableNames(connectionString);
+            /TODO auf Session legen
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                connectionString = "Data Source=.;Initial Catalog=sLogContext-b7effb6c-e814-4615-951a-7452b76832c9;Integrated Security=True";
+            }
 
-            //TODO use partial views, with their partial model
+            IEnumerable<string> tableNames = GetTableNames(connectionString);
+
             return View(new TableNames()
             {
                 ConnectionString = connectionString,

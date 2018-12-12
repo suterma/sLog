@@ -2,10 +2,12 @@
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
+using sLog.Filters;
 using sLog.Models;
 
 namespace sLog.Controllers.DbBrowser
 {
+    [EvaluatePerformanceFilter]
     public class QueryController : Controller
     {
         // GET: Browser

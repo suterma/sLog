@@ -36,12 +36,12 @@ namespace sLog.Filters
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             base.OnActionExecuted(context);
-            var stopTicks = DateTime.Now.Ticks;
-            var startTicks = (long) context.HttpContext.Items[nameof(EvaluatePerformanceFilterAttribute) + "StartTicks"];
+            long stopTicks = DateTime.Now.Ticks;
+            long startTicks = (long) context.HttpContext.Items[nameof(EvaluatePerformanceFilterAttribute) + "StartTicks"];
 
-            var elapsed = TimeSpan.FromTicks(stopTicks - startTicks);
+            TimeSpan elapsed = TimeSpan.FromTicks(stopTicks - startTicks);
 
-            var view = context.Result as ViewResult;
+            ViewResult view = context.Result as ViewResult;
             view?.ViewData.Add("PerformanceDisplay", $"Duration: {elapsed.TotalSeconds} [sec] for action {context.ActionDescriptor.DisplayName} on {context.Controller.GetType().Name}");
         }
     }
