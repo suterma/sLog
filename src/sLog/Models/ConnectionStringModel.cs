@@ -13,6 +13,7 @@ namespace sLog.Models
         /// <value>
         /// The connection string.
         /// </value>
+        [Required]
         [BindRequired]
         [DataType(DataType.Text)]
         [Display(Name = "Database Connection String")]

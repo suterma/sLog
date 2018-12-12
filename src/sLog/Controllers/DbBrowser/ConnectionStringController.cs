@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using sLog.Filters;
+using sLog.Models;
 
 namespace sLog.Controllers.DbBrowser
 {
@@ -18,33 +18,18 @@ namespace sLog.Controllers.DbBrowser
             return View();
         }
 
-        //[HttpPost]
-        //public IActionResult Index(string connectionString)
-        //{
-        //    if (string.IsNullOrEmpty(connectionString))
-        //        return View();
-
-        //    //available, store
-        //    HttpContext.Session.SetString("DbBrowserConnectionString", connectionString);
-
-        //    IEnumerable<string> tableNames = GetTableNames(connectionString);
-
-        //    return View();
-        //}
-
         [HttpPost]
-        public IActionResult Store(string connectionString)
+        [ValidateAntiForgeryToken]
+        public IActionResult StoreAndShowTables([Bind("ConnectionString")] ConnectionStringModel connectionStringModel)
         {
             if (ModelState.IsValid)
             {
                 //available, store and redirect to tables
-                HttpContext.Session.SetString("DbBrowserConnectionString", connectionString);
+                HttpContext.Session.SetString("DbBrowserConnectionString", connectionStringModel.ConnectionString);
 
                 return RedirectToAction("Index", "Tables");
             }
 
-            //not available, throw error
-            //TODO connectionString = HttpContext.Session.GetString("DbBrowserConnectionString");
             return View("Index");
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Data;
 
@@ -9,9 +10,6 @@ namespace sLog.Models
     /// </summary>
     public class TableNames
     {
-        [BindRequired]
-        public string ConnectionString { get; set; }
-
         /// <summary>
         /// Gets or sets the table names.
         /// </summary>

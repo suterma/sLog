@@ -40,9 +40,5 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Query\" />
-  </ItemGroup>
-
   
 </Project>

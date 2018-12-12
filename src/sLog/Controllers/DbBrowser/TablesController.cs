@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using sLog.Filters;
 using sLog.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace sLog.Controllers.DbBrowser
 {
@@ -14,36 +13,25 @@ namespace sLog.Controllers.DbBrowser
     public class TablesController : Controller
     {
         /// <summary>
-        ///     Executes the specified select command.
+        ///     Displays the available Tables.
         /// </summary>
-        /// <param name="connectionString">The connection string.</param>
         /// <returns></returns>
         [HttpGet]
         [HttpPost]
-        public IActionResult Index(string connectionString)
+        public IActionResult Index()
         {
+            //retrieve
+            var connectionString = HttpContext.Session.GetString("DbBrowserConnectionString");
+
+            //If not available, redirect to input view
             if (string.IsNullOrEmpty(connectionString))
-            {
-                //not available, try to retrieve
-                connectionString = HttpContext.Session.GetString("DbBrowserConnectionString");
+                return RedirectToAction("Index", "ConnectionString");
 
-                //If still not available, redirect to input view
-                if (string.IsNullOrEmpty(connectionString))
-                {
-                    return RedirectToAction("Index", "ConnectionString");
-                }
-            }
-            else
-            {
-                //available, store
-                this.HttpContext.Session.SetString("DbBrowserConnectionString", connectionString);
-            }
 
-            IEnumerable<string> tableNames = GetTableNames(connectionString);
+            var tableNames = GetTableNames(connectionString);
 
-            return View(new TableNames()
+            return View(new TableNames
             {
-                ConnectionString = connectionString,
                 Names = tableNames
             });
         }
@@ -55,10 +43,10 @@ namespace sLog.Controllers.DbBrowser
         /// <devdoc>
         ///     Siehe auch http://stackoverflow.com/a/3914051/79485
         /// </devdoc>
-        public IEnumerable<String> GetTableNames(string connectionString)
+        public IEnumerable<string> GetTableNames(string connectionString)
         {
-            var tableNames = new List<String>();
-            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            var tableNames = new List<string>();
+            using (var sqlConnection = new SqlConnection(connectionString))
             {
                 sqlConnection.Open();
                 //BASE TABLE bezeichnet Tabellen, VIEW wäre für Views
@@ -67,7 +55,7 @@ namespace sLog.Controllers.DbBrowser
                     "FROM INFORMATION_SCHEMA.TABLES " +
                     "WHERE TABLE_TYPE = 'BASE TABLE'", sqlConnection);
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
