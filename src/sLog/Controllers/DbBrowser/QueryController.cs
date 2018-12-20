@@ -11,10 +11,16 @@ namespace sLog.Controllers.DbBrowser
     public class QueryController : Controller
     {
         // GET: Browser
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Index(ConnectionStringModel connectionStringModel)
         {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index", "ConnectionString");
+
             return View();
         }
+
+        TODO fix the display of the query string (either via proper _ConnectionStringPartial or via another means)
 
         /// <summary>
         ///     Executes the specified select command.
@@ -23,6 +29,7 @@ namespace sLog.Controllers.DbBrowser
         /// <param name="selectCommand">The SQL SELECT command.</param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Index(string connectionString, string selectCommand)
         {
             var dataAndSchema = GetDataSetAndSchema(connectionString, selectCommand);

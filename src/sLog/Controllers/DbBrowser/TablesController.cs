@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using sLog.Filters;
 using sLog.Models;
@@ -15,20 +14,18 @@ namespace sLog.Controllers.DbBrowser
         /// <summary>
         ///     Displays the available Tables.
         /// </summary>
+        /// <param name="connectionStringModel">The connection string model.</param>
         /// <returns></returns>
         [HttpGet]
         [HttpPost]
-        public IActionResult Index()
+        public IActionResult Index(ConnectionStringModel connectionStringModel)
         {
-            //retrieve
-            var connectionString = HttpContext.Session.GetString("DbBrowserConnectionString");
+            //TODO Als alternative einen Mood als String binden, evtl. Frage auf Stackoverflow dazu, wie kann ich einen Default-Typen binden??
 
-            //If not available, redirect to input view
-            if (string.IsNullOrEmpty(connectionString))
+            if (!ModelState.IsValid)
                 return RedirectToAction("Index", "ConnectionString");
 
-
-            var tableNames = GetTableNames(connectionString);
+            var tableNames = GetTableNames(connectionStringModel.ConnectionString);
 
             return View(new TableNames
             {

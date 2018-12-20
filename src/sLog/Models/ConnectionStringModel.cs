@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace sLog.Models
 {
+    /// <summary>
+    /// A Model for a connection string.
+    /// </summary>
+    /// <remarks>Supports custom model binding, as per <seealso cref="ConnectionStringSessionBinder"/></remarks>
+    [ModelBinder(BinderType = typeof(ConnectionStringSessionBinder), Name = "ConnectionString")]
     public class ConnectionStringModel
     {
         /// <summary>

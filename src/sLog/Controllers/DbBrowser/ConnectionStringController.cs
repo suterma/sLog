@@ -13,24 +13,23 @@ namespace sLog.Controllers.DbBrowser
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(ConnectionStringModel connectionStringModel)
         {
-            return View();
+            return View(connectionStringModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult StoreAndShowTables([Bind("ConnectionString")] ConnectionStringModel connectionStringModel)
+        //public IActionResult StoreAndShowTables([Bind("ConnectionString")] ConnectionStringModel connectionStringModel)
+        public IActionResult StoreAndShowTables(ConnectionStringModel connectionStringModel)
         {
             if (ModelState.IsValid)
             {
-                //available, store and redirect to tables
-                HttpContext.Session.SetString("DbBrowserConnectionString", connectionStringModel.ConnectionString);
-
+                //Connection string was provided, so redirect to tables display
                 return RedirectToAction("Index", "Tables");
             }
 
-            return View("Index");
+            return View("Index", connectionStringModel);
         }
     }
 }
