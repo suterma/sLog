@@ -20,7 +20,7 @@ namespace sLog.Controllers.DbBrowser
             return View();
         }
 
-        TODO fix the display of the query string (either via proper _ConnectionStringPartial or via another means)
+        //TODO fix the display of the query string (either via proper _ConnectionStringPartial or via another means)
 
         /// <summary>
         ///     Executes the specified select command.

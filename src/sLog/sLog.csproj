@@ -20,22 +20,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sLog.Analyzers\sLog.Analyzers.csproj" />
+    <ProjectReference Include="..\sLog.Demo.DataSource.NetScanner\sLog.Demo.DataSource.NetScanner.csproj" />
     <ProjectReference Include="..\sLog.Models\sLog.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Query\Index.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
     <Content Update="Views\Analyze\Details.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Analyze\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Tables\Index.cshtml">
+    <Content Update="Views\Browse\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

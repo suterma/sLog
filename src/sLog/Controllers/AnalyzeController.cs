@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using sLog.Analyzers;
+using sLog.Demo.DataSource.NetScanner;
 using sLog.Models;
 
 namespace sLog.Controllers
@@ -23,8 +23,10 @@ namespace sLog.Controllers
         public async Task<IActionResult> Index()
         {
             DbSet<Log> logs = _context.Log;
-            IQueryable<PingLogAnalyzer> pingLogs = PingLogAnalyzer.Filter(logs);
-            return View(await pingLogs.ToListAsync());
+            IQueryable<LogOfPingResult> pingLogs = LogOfPingResult.Filter(logs);
+            return View(await pingLogs
+                .ToListAsync()                
+                );
         }
 
         // GET: Logs/Details/5
@@ -37,21 +39,22 @@ namespace sLog.Controllers
             }
 
             DbSet<Log> logs = _context.Log;
-            IQueryable<PingLogAnalyzer> pingLogs = PingLogAnalyzer
+            IQueryable<LogOf<PingResult>> pingLogs = LogOf<PingResult>
                 .Filter(logs)
-                .Where(pingLog => pingLog.Target == targetIp);
+                .Where(pingLog => pingLog.Item.Target == targetIp)
+                ;
 
-            var allPingLogs = await pingLogs.ToListAsync();
+            List<LogOf<PingResult>> allPingLogs = await pingLogs.ToListAsync();
 
             //TODO use chart instead of this pseudo average
-            var averagedPingLog = new PingLogAnalyzer()
-            {
-                TimeStamp = allPingLogs.FirstOrDefault().TimeStamp,
-                Target = targetIp,
-                Status = 0,
-                RoundtripTime = TimeSpan.FromTicks((long)allPingLogs.Average(ping => ping.RoundtripTime.Ticks))
 
-            };
+            var averagedPingResult = new PingResult();
+            averagedPingResult.RoundtripTime = TimeSpan.FromTicks((long)allPingLogs.Average(ping => ping.Item.RoundtripTime.Ticks));
+            averagedPingResult.Status = 0;
+            averagedPingResult.Target = targetIp;
+
+
+            var averagedPingLog = new LogOfPingResult(allPingLogs.Last().TimeStamp, averagedPingResult);
             return View(averagedPingLog);
         }  
     }

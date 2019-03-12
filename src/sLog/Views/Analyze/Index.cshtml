@@ -1,4 +1,4 @@
-﻿@model IEnumerable<sLog.Analyzers.PingLogAnalyzer>
+﻿@model IEnumerable<sLog.Demo.DataSource.NetScanner.LogOfPingResult>
 
 @{
     ViewData["Title"] = "Index";
@@ -12,13 +12,13 @@
                 @Html.DisplayNameFor(model => model.TimeStamp)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Target)
+                @Html.DisplayNameFor(model => model.Item.Target)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.Item.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoundtripTime)
+                @Html.DisplayNameFor(model => model.Item.RoundtripTime)
             </th>
             <th></th>
         </tr>
@@ -31,15 +31,15 @@
                     @Html.DisplayFor(modelItem => item.TimeStamp)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Target">
-                        @Html.DisplayFor(modelItem => item.Target)
+                    <a asp-action="Details" asp-route-id="@item.Item.Target">
+                        @Html.DisplayFor(modelItem => item.Item.Target)
                     </a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Status)
+                    @Html.DisplayFor(modelItem => item.Item.Status)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RoundtripTime)
+                    @Html.DisplayFor(modelItem => item.Item.RoundtripTime)
                 </td>
                 @*<td>
                         <a asp-action="Details" asp-route-id="@item.LogId">Details</a> |

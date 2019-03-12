@@ -1,4 +1,4 @@
-﻿@model sLog.Analyzers.PingLogAnalyzer
+﻿@model sLog.Demo.DataSource.NetScanner.LogOfPingResult
 
 @{
     ViewData["Title"] = "Details";
@@ -17,22 +17,22 @@
             @Html.DisplayFor(model => model.TimeStamp)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Target)
+            @Html.DisplayNameFor(model => model.Item.Target)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Target)
+            @Html.DisplayFor(model => model.Item.Target)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Status)
+            @Html.DisplayNameFor(model => model.Item.Status)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Status)
+            @Html.DisplayFor(model => model.Item.Status)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.RoundtripTime)
+            @Html.DisplayNameFor(model => model.Item.RoundtripTime)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.RoundtripTime)
+            @Html.DisplayFor(model => model.Item.RoundtripTime)
         </dd>
     </dl>
 </div>
