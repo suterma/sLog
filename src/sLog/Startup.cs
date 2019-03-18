@@ -80,6 +80,10 @@ namespace sLog
                 app.UseHsts();
             }
 
+            //Enable QR-Image generator as middleware (Insert before serving static content)
+            app.MapWhen(context => context.Request.Query.ContainsKey("qrimg"),
+                       HandleQrImageBranch);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -100,11 +104,23 @@ namespace sLog
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
 
-                //Additional route to have the DbBrowser in it's own subfolder
-                routes.MapRoute(
-                    name: "DbBrowser",
-                    template: "db/{controller=Query}/{action=Index}/{id?}");
+
+
+        }
+
+        /// <summary>
+        /// Handles the qr image branch.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        private static void HandleQrImageBranch(IApplicationBuilder app)
+        {
+            app.Run(async context =>
+            {
+                var qrimg = context.Request.Query["qrimg"];
+                await context.Response.WriteAsync($"Branch used = {qrimg}");
+               
             });
         }
     }
