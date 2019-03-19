@@ -27,30 +27,40 @@ namespace sLog.Components
         /// <param name="output">A stateful HTML element used to generate an HTML tag.</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            //TODO use more attributes like size and quality
             //TODO create middleware for having a URL-Based generator
-            var QrcodeContent = context.AllAttributes["content"].Value.ToString();
-            var alt = context.AllAttributes["alt"].Value.ToString();
-            var width = 250; // width of the Qr Code   
-            var height = 250; // height of the Qr Code   
-            var margin = 0;
-            var qrCodeWriter = new ZXing.BarcodeWriterPixelData
+            string qrText = context.AllAttributes["content"].Value.ToString();
+            string alt = context.AllAttributes["alt"].Value.ToString();
+
+            //Get sizes
+            int width;
+            if (!int.TryParse(context.AllAttributes["width"]?.Value.ToString(), out width))
+            {
+                width = 250; //Default
+            }
+            int height;
+            if (!int.TryParse(context.AllAttributes["height"]?.Value.ToString(), out height))
+            {
+                height = 250; //Default
+            }
+            int margin = 0;
+            ZXing.BarcodeWriterPixelData qrCodeWriter = new ZXing.BarcodeWriterPixelData
             {
                 Format = ZXing.BarcodeFormat.QR_CODE,
                 Options = new QrCodeEncodingOptions
                 {
                     Height = height,
                     Width = width,
-                    Margin = margin
+                    Margin = margin,
+                    ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.L
                 }
             };
-            var pixelData = qrCodeWriter.Write(QrcodeContent);
+            ZXing.Rendering.PixelData pixelData = qrCodeWriter.Write(qrText);
             // creating a bitmap from the raw pixel data; if only black and white colors are used it makes no difference   
             // that the pixel data ist BGRA oriented and the bitmap is initialized with RGB   
-            using (var bitmap = new System.Drawing.Bitmap(pixelData.Width, pixelData.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
-            using (var ms = new MemoryStream())
+            using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(pixelData.Width, pixelData.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
+            using (MemoryStream ms = new MemoryStream())
             {
-                var bitmapData = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, pixelData.Width, pixelData.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+                System.Drawing.Imaging.BitmapData bitmapData = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, pixelData.Width, pixelData.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
                 try
                 {
                     // we assume that the row stride of the bitmap is aligned to 4 byte multiplied by the width of the image   
