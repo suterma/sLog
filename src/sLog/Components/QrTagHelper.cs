@@ -27,7 +27,6 @@ namespace sLog.Components
         /// <param name="output">A stateful HTML element used to generate an HTML tag.</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            //TODO create middleware for having a URL-Based generator
             string qrText = context.AllAttributes["content"].Value.ToString();
             string alt = context.AllAttributes["alt"].Value.ToString();
 
@@ -43,6 +42,11 @@ namespace sLog.Components
                 height = 250; //Default
             }
             int margin = 0;
+            RenderQrCode(output, qrText, alt, width, height, margin);
+        }
+
+        private static void RenderQrCode(TagHelperOutput output, string qrText, string alt, int width, int height, int margin)
+        {
             ZXing.BarcodeWriterPixelData qrCodeWriter = new ZXing.BarcodeWriterPixelData
             {
                 Format = ZXing.BarcodeFormat.QR_CODE,

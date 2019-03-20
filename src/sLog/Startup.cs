@@ -81,8 +81,7 @@ namespace sLog
             }
 
             //Enable QR-Image generator as middleware (Insert before serving static content)
-            app.MapWhen(context => context.Request.Query.ContainsKey("qrimg"),
-                       HandleQrImageBranch);
+            app.UseMiddleware<QrImageMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -108,20 +107,6 @@ namespace sLog
 
 
 
-        }
-
-        /// <summary>
-        /// Handles the qr image branch.
-        /// </summary>
-        /// <param name="app">The application.</param>
-        private static void HandleQrImageBranch(IApplicationBuilder app)
-        {
-            app.Run(async context =>
-            {
-                var qrimg = context.Request.Query["qrimg"];
-                await context.Response.WriteAsync($"Branch used = {qrimg}");
-               
-            });
         }
     }
 }

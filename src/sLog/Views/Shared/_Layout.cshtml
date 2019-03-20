@@ -54,7 +54,7 @@
 
                 @*Show a QR code image as a link to this page*@
                 @*Code and examples taken from https://code.msdn.microsoft.com/ZXINGNET-QRCode-Generator-05128cfb*@
-                <img src="http://localhost:50062/?qrimg=m&size=100px" />
+                <img src="http://localhost:50062/?qrcode&content=test&size=100px" />
                 <qrcode alt="QR Code" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" widht="75" height="75" />
             </p>
         </footer>
