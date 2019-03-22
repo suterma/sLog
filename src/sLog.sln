@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sLog", "sLog\sLog.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sLog.Demo.DataSource.NetScanner", "sLog.Demo.DataSource.NetScanner\sLog.Demo.DataSource.NetScanner.csproj", "{979CD14E-8B19-499F-B3B6-2341119FD3E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sLog.Analyzers", "sLog.Analyzers\sLog.Analyzers.csproj", "{A974FD7A-E8C2-4F1C-9A1C-CC6B57786E14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sLog.Analyzers", "sLog.Analyzers\sLog.Analyzers.csproj", "{A974FD7A-E8C2-4F1C-9A1C-CC6B57786E14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickCore", "QuickCore\QuickCore.csproj", "{444335AA-7FA3-4A37-A24A-A20C07656849}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A974FD7A-E8C2-4F1C-9A1C-CC6B57786E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A974FD7A-E8C2-4F1C-9A1C-CC6B57786E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A974FD7A-E8C2-4F1C-9A1C-CC6B57786E14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{444335AA-7FA3-4A37-A24A-A20C07656849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{444335AA-7FA3-4A37-A24A-A20C07656849}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{444335AA-7FA3-4A37-A24A-A20C07656849}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{444335AA-7FA3-4A37-A24A-A20C07656849}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

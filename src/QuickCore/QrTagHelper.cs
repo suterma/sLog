@@ -16,6 +16,7 @@ namespace sLog.Components
     /// <example>&lt;qrcode alt="QR Code" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" /&gt;
     /// <code></code></example>
     /// <seealso cref="Microsoft.AspNetCore.Razor.TagHelpers.TagHelper"/>
+    /// <devdoc>Code taken from https://dzone.com/articles/qr-code-generator-in-aspnet-core-using-zxingnet-la</devdoc>
     [HtmlTargetElement("qrcode")]
     public class QrTagHelper : TagHelper
     {
@@ -27,7 +28,7 @@ namespace sLog.Components
         /// <param name="output">A stateful HTML element used to generate an HTML tag.</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            string qrText = context.AllAttributes["content"].Value.ToString();
+            string text = context.AllAttributes["content"].Value.ToString();
             string alt = context.AllAttributes["alt"].Value.ToString();
 
             //Get sizes
@@ -42,10 +43,10 @@ namespace sLog.Components
                 height = 250; //Default
             }
             int margin = 0;
-            RenderQrCode(output, qrText, alt, width, height, margin);
+            RenderQrCode(output, text, alt, width, height, margin);
         }
 
-        private static void RenderQrCode(TagHelperOutput output, string qrText, string alt, int width, int height, int margin)
+        private static void RenderQrCode(TagHelperOutput output, string text, string alt, int width, int height, int margin)
         {
             ZXing.BarcodeWriterPixelData qrCodeWriter = new ZXing.BarcodeWriterPixelData
             {
@@ -58,10 +59,10 @@ namespace sLog.Components
                     ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.L
                 }
             };
-            ZXing.Rendering.PixelData pixelData = qrCodeWriter.Write(qrText);
+            ZXing.Rendering.PixelData pixelData = qrCodeWriter.Write(text);
             // creating a bitmap from the raw pixel data; if only black and white colors are used it makes no difference   
             // that the pixel data ist BGRA oriented and the bitmap is initialized with RGB   
-            using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(pixelData.Width, pixelData.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
+            using (var bitmap = new System.Drawing.Bitmap(pixelData.Width, pixelData.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
             using (MemoryStream ms = new MemoryStream())
             {
                 System.Drawing.Imaging.BitmapData bitmapData = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, pixelData.Width, pixelData.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);

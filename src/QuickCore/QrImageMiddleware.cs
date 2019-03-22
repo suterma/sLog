@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,12 +6,21 @@ using ZXing.QrCode;
 
 namespace sLog
 {
-    /// <summary>
-    /// Handles the QR image creation, if requested by the request query.
-    /// </summary>
-    internal class QrImageMiddleware
+    /// <summary>Handles the QR image creation, if triggerd by the request query.</summary>
+    /// <remarks>
+    ///   <para>To request a QR image, simply add query parameters to the URL:
+    /// </para>
+    ///   <list type="bullet">
+    ///     <item>'qrcode' (without value), to trigger the creation
+    /// </item>
+    ///     <item>'content' as content of the QR code  (an empty text ist used as default)
+    /// </item>
+    ///     <item>'widht' and 'height' (in pixesl) for the size of the image (250 is used as default)
+    /// </item>
+    ///   </list>
+    /// </remarks>
+    public class QrImageMiddleware
     {
-
         private readonly RequestDelegate _next;
 
         /// <summary>
@@ -24,17 +32,46 @@ namespace sLog
             _next = next;
         }
 
+        /// <summary>
+        /// Invokes the creation asynchronously.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
         public async Task InvokeAsync(HttpContext context)
         {
             string qrCode = context.Request.Query["qrcode"].FirstOrDefault();
             if (qrCode != null)
             {
+                //TODO get the QR code attributes
+
+                string text = context.Request.Query["content"].FirstOrDefault();
+
+                //Get sizes (specific width and height override size)
+                int size = 250; //Default
+                int width;
+                int height;
+                if (int.TryParse(context.Request.Query["size"].FirstOrDefault(), out size))
+                {
+                    width = size; 
+                    height = size;
+                }
+
+                if (!int.TryParse(context.Request.Query["width"].FirstOrDefault(), out width))
+                {
+                    width = size; //Default
+                }
+                if (!int.TryParse(context.Request.Query["height"].FirstOrDefault(), out height))
+                {
+                    height = size; //Default
+                }
+                int margin = 0;
+
                 //string qrCcode = qrcodeKeys.FirstOrDefault();
                 //await context.Response.wri($"Branch used = {qrcode}");
 
                 //TODO make more async style
-                       context.Response.ContentType = "image/png";
-                RenderQrCode(context.Response.Body, "test", "altTest", 200, 200, 0);
+                context.Response.ContentType = "image/png";
+                RenderQrCode(context.Response.Body, text, width, height, margin);
 
             }
             else
@@ -44,8 +81,9 @@ namespace sLog
             }
         }
 
-        private static void RenderQrCode(Stream output, string qrText, string alt, int width, int height, int margin)
+        private static void RenderQrCode(Stream output, string text, int width, int height, int margin)
         {
+            //TODO use 1 function, combine taghelper and middleware
             ZXing.BarcodeWriterPixelData qrCodeWriter = new ZXing.BarcodeWriterPixelData
             {
                 Format = ZXing.BarcodeFormat.QR_CODE,
@@ -57,7 +95,7 @@ namespace sLog
                     ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.L
                 }
             };
-            ZXing.Rendering.PixelData pixelData = qrCodeWriter.Write(qrText);
+            ZXing.Rendering.PixelData pixelData = qrCodeWriter.Write(text);
             // creating a bitmap from the raw pixel data; if only black and white colors are used it makes no difference   
             // that the pixel data ist BGRA oriented and the bitmap is initialized with RGB   
             using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(pixelData.Width, pixelData.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
