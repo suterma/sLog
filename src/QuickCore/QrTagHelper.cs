@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using ZXing.QrCode;
 
-
-namespace sLog.Components
+namespace QuickCore
 {
     /// <summary>A TagHelper for adding QR-codes to HTML.</summary>
     /// <remarks>
@@ -43,38 +38,17 @@ namespace sLog.Components
                 height = 250; //Default
             }
             int margin = 0;
-            RenderQrCode(output, text, alt, width, height, margin);
-        }
 
-        private static void RenderQrCode(TagHelperOutput output, string text, string alt, int width, int height, int margin)
-        {
-            ZXing.BarcodeWriterPixelData qrCodeWriter = new ZXing.BarcodeWriterPixelData
-            {
-                Format = ZXing.BarcodeFormat.QR_CODE,
-                Options = new QrCodeEncodingOptions
-                {
-                    Height = height,
-                    Width = width,
-                    Margin = margin,
-                    ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.L
-                }
-            };
-            ZXing.Rendering.PixelData pixelData = qrCodeWriter.Write(text);
+
+            ZXing.Rendering.PixelData pixelData = Renderer.GetPixelData(text, width, height, margin);
+
             // creating a bitmap from the raw pixel data; if only black and white colors are used it makes no difference   
             // that the pixel data ist BGRA oriented and the bitmap is initialized with RGB   
             using (var bitmap = new System.Drawing.Bitmap(pixelData.Width, pixelData.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
             using (MemoryStream ms = new MemoryStream())
             {
-                System.Drawing.Imaging.BitmapData bitmapData = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, pixelData.Width, pixelData.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
-                try
-                {
-                    // we assume that the row stride of the bitmap is aligned to 4 byte multiplied by the width of the image   
-                    System.Runtime.InteropServices.Marshal.Copy(pixelData.Pixels, 0, bitmapData.Scan0, pixelData.Pixels.Length);
-                }
-                finally
-                {
-                    bitmap.UnlockBits(bitmapData);
-                }
+                Renderer.DrawBitmap(pixelData, bitmap);
+
                 // save to stream as PNG   
                 bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                 output.TagName = "img";
@@ -85,5 +59,7 @@ namespace sLog.Components
                 output.Attributes.Add("src", String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ms.ToArray())));
             }
         }
+
+
     }
 }

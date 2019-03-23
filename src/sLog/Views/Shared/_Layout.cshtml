@@ -53,8 +53,7 @@
                 <span class="small">@ViewData["PerformanceDisplay"]</span>
 
                 @*Show a QR code image as a link to this page*@
-                @*Code and examples taken from https://code.msdn.microsoft.com/ZXINGNET-QRCode-Generator-05128cfb*@
-                Image: <img src="http://localhost:50062/?qrcode&content=test2&size=20" />
+                Image: <img src="http://localhost:50062/?qrcode&content=@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")&size=20" />
                 Tag: <qrcode alt="QR Code" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" widht="75" height="75" />
             </p>
         </footer>

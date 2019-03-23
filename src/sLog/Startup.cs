@@ -14,6 +14,7 @@ using sLog.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.IO;
+using QuickCore;
 
 namespace sLog
 {
