@@ -26,21 +26,19 @@ namespace QuickCore
             string text = context.AllAttributes["content"].Value.ToString();
             string alt = context.AllAttributes["alt"].Value.ToString();
 
-            //Get sizes
-            int width;
-            if (!int.TryParse(context.AllAttributes["width"]?.Value.ToString(), out width))
+            //Get size
+            int size;
+            if (!int.TryParse(context.AllAttributes["size"]?.Value.ToString(), out size))
             {
-                width = 250; //Default
+                size = 250; //Default
             }
-            int height;
-            if (!int.TryParse(context.AllAttributes["height"]?.Value.ToString(), out height))
+            int margin;
+            if (!int.TryParse(context.AllAttributes["margin"]?.Value.ToString(), out margin))
             {
-                height = 250; //Default
+                margin = 5; //Default
             }
-            int margin = 0;
 
-
-            ZXing.Rendering.PixelData pixelData = Renderer.GetPixelData(text, width, height, margin);
+            ZXing.Rendering.PixelData pixelData = Renderer.GetPixelData(text, size, size, margin);
 
             // creating a bitmap from the raw pixel data; if only black and white colors are used it makes no difference   
             // that the pixel data ist BGRA oriented and the bitmap is initialized with RGB   
@@ -53,8 +51,8 @@ namespace QuickCore
                 bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                 output.TagName = "img";
                 output.Attributes.Clear();
-                output.Attributes.Add("width", width);
-                output.Attributes.Add("height", height);
+                output.Attributes.Add("width", size);
+                output.Attributes.Add("height", size);
                 output.Attributes.Add("alt", alt);
                 output.Attributes.Add("src", String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ms.ToArray())));
             }

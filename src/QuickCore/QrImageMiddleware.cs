@@ -45,28 +45,22 @@ namespace QuickCore
                 string text = context.Request.Query["content"].FirstOrDefault();
 
                 //Get sizes (specific width and height override size)
-                int size = 250; //Default
-                int width;
-                int height;
-                if (int.TryParse(context.Request.Query["size"].FirstOrDefault(), out size))
+                int size;
+                if (!int.TryParse(context.Request.Query["size"].FirstOrDefault(), out size))
                 {
-                    width = size;
-                    height = size;
+                    size = 250; //Default
                 }
 
-                if (!int.TryParse(context.Request.Query["width"].FirstOrDefault(), out width))
+                int margin;
+                if (!int.TryParse(context.Request.Query["margin"].FirstOrDefault(), out margin))
                 {
-                    width = size; //Default
+                    margin = 5; //Default
                 }
-                if (!int.TryParse(context.Request.Query["height"].FirstOrDefault(), out height))
-                {
-                    height = size; //Default
-                }
-                int margin = 0;
+            
 
                 //Render the QR image
                 context.Response.ContentType = "image/png";
-                ZXing.Rendering.PixelData pixelData = Renderer.GetPixelData(text, width, height, margin);
+                ZXing.Rendering.PixelData pixelData = Renderer.GetPixelData(text, size, size, margin);
 
                 // creating a bitmap from the raw pixel data; if only black and white colors are used it makes no difference   
                 // that the pixel data ist BGRA oriented and the bitmap is initialized with RGB   

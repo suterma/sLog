@@ -53,8 +53,24 @@
                 <span class="small">@ViewData["PerformanceDisplay"]</span>
 
                 @*Show a QR code image as a link to this page*@
-                Image: <img src="http://localhost:50062/?qrcode&content=@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")&size=20" />
-                Tag: <qrcode alt="QR Code" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" widht="75" height="75" />
+
+                //TODO show the link source as part of the example
+                <h3>By appending a segment</h3>
+                Uses a (possibly relative) link with an appended path segment. The URL is handeled via a custom routed API controller.
+                Example (a link back to this page): <img src="./qrcode/120" alt="a link back to this page" />
+
+                <h3>By using an API</h3>
+                A link to an API with path segments as parameters. The URL is handeled via a custom routed API controller.
+                @* Image: <img src="http://localhost:50062/api/qrcode/@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")/400" />*@
+                Example (a link to google.com): <img src="http://localhost:50062/api/qrcode/google.com/120" />
+
+                <h3>By using a query part</h3>
+                A link with a query and explicit parameters. The URL is handeled by middleware
+                Example (a link to google.com): <img src="http://localhost:50062/?qrcode&content=google.com&size=120" />
+
+                <h3>By a custom <code>HtmlTagHelper</code></h3>
+                An interpreted custom HTML tag. Works via the razor engine. The image is rendered inline, together with the view.
+                Example (a link to google.com): <qrcode alt="QR Code, containing a link to google.com" content="google.com" size="120" margin="5" />
             </p>
         </footer>
     </div>

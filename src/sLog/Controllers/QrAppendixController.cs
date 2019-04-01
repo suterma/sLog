@@ -24,7 +24,7 @@ namespace sLog.Controllers
     /// <devdoc>
     /// <para>To have the end of the URL match (instead of a prefix), the asterisk variant of the regex matcher is used. The regex will match any URL that has a '/qrcode' segement, followed by any number of digit-only segments (the optional QR code parameters). See https://docs.microsoft.com/en-us/aspnet/web-api/overview/web-api-routing-and-actions/create-a-rest-api-with-attribute-routing#get-books-by-publication-date with the wildcard example at the end.</para>
     /// </devdoc>
-    [Route("/{*url:regex(^.*\\/qrcode(\\/\\d*)*$)}")]
+    [Route("/{*url:regex(^.*qrcode(\\/\\d*)*$)}")]
     [ApiController]
     public class QrAppendixController : ControllerBase
     {
@@ -41,20 +41,20 @@ namespace sLog.Controllers
         public async Task<IActionResult> GetQrCode([FromRoute] string url)
         {
             //TODO move to the QuickCore assembly and import using Application Parts
-            var qrPostfix = url.Substring(url.IndexOf("/qrcode"));
+            var qrPostfix = url.Substring(url.IndexOf("qrcode"));
             var qrSegments = qrPostfix.Split('/');
 
             int size;
-            if (!int.TryParse(qrSegments.Skip(2).FirstOrDefault(), out size)) {
+            if (!int.TryParse(qrSegments.Skip(1).FirstOrDefault(), out size)) {
                 size = 100;
             }
             int margin;
-            if (!int.TryParse(qrSegments.Skip(3).FirstOrDefault(), out margin)) {
+            if (!int.TryParse(qrSegments.Skip(2).FirstOrDefault(), out margin)) {
                 margin = 5;
             }
 
             //Get the target URL and use as text
-            string targetPath = url.Substring(0, url.IndexOf("/qrcode"));
+            string targetPath = url.Substring(0, url.IndexOf("qrcode"));
             string text = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/{targetPath}{HttpContext.Request.QueryString}";
 
             //Render the QR image
